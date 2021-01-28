@@ -230,6 +230,9 @@ def llvm_register_toolchains():
         },
     )
 
+    rctx.execute(["cp", "lib/libc++.a", "lib/libc++-static.a"])
+    rctx.execute(["cp", "lib/libc++abi.a", "lib/libc++abi-static.a"])
+
 def _cc_toolchains_str(
         workspace_name,
         toolchain_info,
