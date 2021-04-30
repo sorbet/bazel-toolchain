@@ -149,6 +149,9 @@ def cc_toolchain_config(
             "-headerpad_max_install_names",
             "-undefined",
             "dynamic_lookup",
+
+            # For Big Sur/Catalina compatibility
+            "-mlinker-version=400",
         ])
     else:
         # Note that for xcompiling from darwin to linux, the native ld64 is
