@@ -168,6 +168,9 @@ def _impl(ctx):
             "-headerpad_max_install_names",
             "-undefined",
             "dynamic_lookup",
+
+            # For Big Sur/Catalina compatibility
+            "-mlinker-version=400",
         ]
     else:
         fail("Unreachable")
