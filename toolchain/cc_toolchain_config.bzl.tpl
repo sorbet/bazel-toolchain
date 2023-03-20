@@ -565,13 +565,21 @@ def _impl(ctx):
         "%{toolchain_path_prefix}/lib/clang/%{llvm_version}/share",
         "%{toolchain_path_prefix}lib64/clang/%{llvm_version}/include",
     ]
-    if (ctx.attr.cpu == "k8" or ctx.attr.cpu == "aarch64"):
+    if (ctx.attr.cpu == "k8"):
         cxx_builtin_include_directories += [
             "%{sysroot_prefix}/include",
             "%{sysroot_prefix}/usr/include",
             "%{sysroot_prefix}/usr/local/include",
         ] + [
             %{k8_additional_cxx_builtin_include_directories}
+        ]
+    elif (ctx.attr.cpu == "aarch64"):
+        cxx_builtin_include_directories += [
+            "%{sysroot_prefix}/include",
+            "%{sysroot_prefix}/usr/include",
+            "%{sysroot_prefix}/usr/local/include",
+        ] + [
+            %{aarch64_additional_cxx_builtin_include_directories}
         ]
     elif (ctx.attr.cpu == "darwin"):
         cxx_builtin_include_directories += [
