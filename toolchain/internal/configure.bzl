@@ -65,6 +65,7 @@ def llvm_register_toolchains():
         "%{absolute_paths}": "True" if rctx.attr.absolute_paths else "False",
         "%{makevars_ld_flags}": _makevars_ld_flags(rctx),
         "%{k8_additional_cxx_builtin_include_directories}": _include_dirs_str(rctx, "k8"),
+        "%{aarch64_additional_cxx_builtin_include_directories}": _include_dirs_str(rctx, "aarch64"),
         "%{darwin_additional_cxx_builtin_include_directories}": _include_dirs_str(rctx, "darwin"),
     }
 
@@ -112,11 +113,11 @@ def llvm_register_toolchains():
     rctx.execute(["cp", "lib/libc++.a", "lib/libc++-static.a"])
     rctx.execute(["cp", "lib/libc++abi.a", "lib/libc++abi-static.a"])
 
-def conditional_cc_toolchain(name, darwin, absolute_paths = False):
+def conditional_cc_toolchain(name, cpu, darwin, absolute_paths = False):
     # Toolchain macro for BUILD file to use conditional logic.
 
-    toolchain_config = "local_darwin" if darwin else "local_linux"
-    toolchain_identifier = "clang-darwin" if darwin else "clang-linux"
+    toolchain_config = "local_darwin" if darwin else ("local_linux-%s" % cpu)
+    toolchain_identifier = "clang-darwin" if darwin else ("clang-linux-%s" % cpu)
 
     if absolute_paths:
         _cc_toolchain(
