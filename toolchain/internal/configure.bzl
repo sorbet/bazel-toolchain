@@ -112,11 +112,11 @@ def llvm_register_toolchains():
     rctx.execute(["cp", "lib/libc++.a", "lib/libc++-static.a"])
     rctx.execute(["cp", "lib/libc++abi.a", "lib/libc++abi-static.a"])
 
-def conditional_cc_toolchain(name, darwin, absolute_paths = False):
+def conditional_cc_toolchain(name, cpu, darwin, absolute_paths = False):
     # Toolchain macro for BUILD file to use conditional logic.
 
-    toolchain_config = "local_darwin" if darwin else "local_linux"
-    toolchain_identifier = "clang-darwin" if darwin else "clang-linux"
+    toolchain_config = "local_darwin" if darwin else ("local_linux-%s" % cpu)
+    toolchain_identifier = "clang-darwin" if darwin else ("clang-linux-%s" % cpu)
 
     if absolute_paths:
         _cc_toolchain(

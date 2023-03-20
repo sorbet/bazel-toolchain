@@ -109,9 +109,9 @@ toolchain(
 
 load("@com_grail_bazel_toolchain//toolchain:rules.bzl", "conditional_cc_toolchain")
 
-conditional_cc_toolchain("cc-clang-linux-x86_64", False, %{absolute_paths})
-conditional_cc_toolchain("cc-clang-linux-aarch64", False, %{absolute_paths})
-conditional_cc_toolchain("cc-clang-darwin", True, %{absolute_paths})
+conditional_cc_toolchain("cc-clang-linux-x86_64", "x86_64", False, %{absolute_paths})
+conditional_cc_toolchain("cc-clang-linux-aarch64", "aarch64", False, %{absolute_paths})
+conditional_cc_toolchain("cc-clang-darwin", "x86_64", True, %{absolute_paths})
 
 ## LLVM toolchain files
 # Needed when not using absolute paths.
