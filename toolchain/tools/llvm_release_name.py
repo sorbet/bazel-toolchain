@@ -92,7 +92,7 @@ def _linux(llvm_version):
             os_name = "linux-gnu-ubuntu-16.04"
         else:
             os_name = "linux-gnu-ubuntu-18.04"
-    elif distname in ["arch", "ubuntu", "manjaro", "void"] or (distname == "linuxmint" and version.startswith("18")):
+    elif distname in ["arch", "ubuntu", "manjaro"] or (distname == "linuxmint" and version.startswith("18")):
         os_name = "linux-gnu-ubuntu-16.04"
     elif distname == "debian" and (version is None or int(version) == 10):
         os_name = "linux-gnu-ubuntu-18.04"
@@ -108,6 +108,8 @@ def _linux(llvm_version):
     elif distname == "fedora" and major_llvm_version >= 7:
         os_name = "linux-gnu-ubuntu-18.04"
     elif distname == "amzn" and major_llvm_version >= 7:
+        os_name = "linux-gnu-ubuntu-18.04"
+    elif distname == "void" and major_llvm_version >= 7:
         os_name = "linux-gnu-ubuntu-18.04"
     else:
         sys.exit("Unsupported linux distribution and version: %s, %s" % (distname, version))
