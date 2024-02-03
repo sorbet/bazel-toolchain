@@ -17,7 +17,7 @@
 import platform
 import sys
 
-_known_distros = ["freebsd", "suse", "ubuntu", "arch", "manjaro", "debian", "fedora", "centos"]
+_known_distros = ["freebsd", "suse", "ubuntu", "arch", "manjaro", "debian", "fedora", "centos", "void"]
 
 def _major_llvm_version(llvm_version):
     return int(llvm_version.split(".")[0])
@@ -109,6 +109,8 @@ def _linux(llvm_version):
         os_name = "linux-gnu-ubuntu-18.04"
     elif distname == "amzn" and major_llvm_version >= 7:
         os_name = "linux-gnu-ubuntu-18.04"
+    elif distname == "void" and major_llvm_version >= 7:
+        os_name = "linux-gnu-ubuntu-20.04"
     else:
         sys.exit("Unsupported linux distribution and version: %s, %s" % (distname, version))
 
