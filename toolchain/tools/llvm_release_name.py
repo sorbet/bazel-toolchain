@@ -17,7 +17,7 @@
 import platform
 import sys
 
-_known_distros = ["freebsd", "suse", "ubuntu", "arch", "manjaro", "debian", "fedora", "centos"]
+_known_distros = ["freebsd", "suse", "ubuntu", "arch", "manjaro", "debian", "fedora", "centos", "void"]
 
 def _major_llvm_version(llvm_version):
     return int(llvm_version.split(".")[0])
@@ -92,7 +92,7 @@ def _linux(llvm_version):
             os_name = "linux-gnu-ubuntu-16.04"
         else:
             os_name = "linux-gnu-ubuntu-18.04"
-    elif distname in ["arch", "ubuntu", "manjaro"] or (distname == "linuxmint" and version.startswith("18")):
+    elif distname in ["arch", "ubuntu", "manjaro", "void"] or (distname == "linuxmint" and version.startswith("18")):
         os_name = "linux-gnu-ubuntu-16.04"
     elif distname == "debian" and (version is None or int(version) == 10):
         os_name = "linux-gnu-ubuntu-18.04"
