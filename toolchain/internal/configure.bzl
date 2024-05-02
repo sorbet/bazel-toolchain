@@ -112,7 +112,6 @@ def llvm_register_toolchains():
 
     rctx.execute(["cp", "lib/libc++.a", "lib/libc++-static.a"])
     rctx.execute(["cp", "lib/libc++abi.a", "lib/libc++abi-static.a"])
-    rctx.execute(["rm", "-f", "lib/libunwind.dylib", "lib/libunwind.1.dylib", "lib/libunwind.1.0.dylib"])
 
 def conditional_cc_toolchain(name, cpu, darwin, absolute_paths = False):
     # Toolchain macro for BUILD file to use conditional logic.
