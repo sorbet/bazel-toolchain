@@ -208,8 +208,8 @@ def cc_toolchain_config(
             # toolchain directory back after we are done.
             link_flags.extend([
                 "-L{}/usr/lib".format(compiler_configuration["sysroot_path"]),
-                "-lc++",
-                "-lc++abi",
+                "{}lib/libc++.a".format(toolchain_path_prefix),
+                "{}lib/libc++abi.a".format(toolchain_path_prefix),
             ])
 
             # Let's provide the path to the toolchain library directory
