@@ -255,10 +255,12 @@ def _impl(ctx):
                 actions = all_link_actions,
                 flag_groups = [
                     flag_group(
+                        # Explicitly specify the archive paths rather than using -L
+                        # so that the linker doesn't go poking around in toolchain_path_prefix
+                        # for libraries like libunwind -- at least by default.
                         flags = [
-                            "-L%{toolchain_path_prefix}/lib",
-                            "-lc++-static",
-                            "-lc++abi-static",
+                            "%{toolchain_path_prefix}/lib/libc++-static.a",
+                            "%{toolchain_path_prefix}/lib/libc++abi-static.a",
                         ],
                     ),
                 ],
