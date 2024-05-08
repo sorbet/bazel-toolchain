@@ -161,9 +161,8 @@ def main():
     llvm_version = sys.argv[1]
 
     system = platform.system()
-    arch = platform.machine()
     if system == "Darwin":
-        print(_darwin(llvm_version, arch))
+        print(_darwin(llvm_version, "x86_64"))
         sys.exit()
 
     if system == "Windows":
