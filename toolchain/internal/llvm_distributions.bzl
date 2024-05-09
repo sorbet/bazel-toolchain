@@ -246,6 +246,8 @@ _llvm_distributions = {
     "clang+llvm-15.0.7-powerpc64le-linux-rhel-8.4.tar.xz": "2163cc934437146dc30810a21a46327ba3983f123c3bea19be316a64135b6414",
     "clang+llvm-15.0.7-powerpc64le-linux-ubuntu-18.04.tar.xz": "19a16d768e15966923b0cbf8fc7dc148c89e316857acd89ad3aff72dcfcd61f4",
     "clang+llvm-15.0.7-x86_64-apple-darwin21.0.tar.xz": "d16b6d536364c5bec6583d12dd7e6cf841b9f508c4430d9ee886726bd9983f1c",
+    # -- Built by Stripe, not upstream --
+    "clang+llvm-15.0.7-x86_64-linux-gnu-ubuntu-20.04.tar.xz": "3393c29279aea207996d816c7f5a6ddecf3451ab31242319b716e3ea074efdac",
 
     # 16.0.0
     "clang+llvm-16.0.0-aarch64-linux-gnu.tar.xz": "b750ba3120e6153fc5b316092f19b52cf3eb64e19e5f44bd1b962cb54a20cf0a",
