@@ -22,11 +22,44 @@ _known_distros = ["freebsd", "suse", "ubuntu", "arch", "manjaro", "debian", "fed
 def _major_llvm_version(llvm_version):
     return int(llvm_version.split(".")[0])
 
-def _darwin(llvm_version):
+def _minor_llvm_version(llvm_version):
+    return int(llvm_version.split(".")[1])
+
+def _patch_llvm_version(llvm_version):
+    return int(llvm_version.split(".")[2])
+
+def _darwin_apple_suffix(llvm_version, arch):
     major_llvm_version = _major_llvm_version(llvm_version)
-    suffix = "darwin-apple" if major_llvm_version == 9 else "apple-darwin"
-    return "clang+llvm-{llvm_version}-x86_64-{suffix}.tar.xz".format(
-        llvm_version=llvm_version, suffix=suffix)
+    patch_llvm_version = _patch_llvm_version(llvm_version)
+    if major_llvm_version == 9:
+        return "darwin-apple"
+    elif major_llvm_version == 14:
+        if arch == "arm64":
+            return "apple-darwin22.3.0"
+        else:
+            return "apple-darwin"
+    elif major_llvm_version == 15 and patch_llvm_version <= 6:
+        if arch == "arm64":
+            return "apple-darwin21.0"
+        else:
+            return "apple-darwin"
+    elif major_llvm_version >= 15:
+        if arch == "arm64":
+            return "apple-darwin22.0"
+        else:
+            return "apple-darwin21.0"
+    else:
+        return "apple-darwin"
+
+def _darwin(llvm_version, arch):
+    if arch == "aarch64":
+        arch = "arm64"
+    suffix = _darwin_apple_suffix(llvm_version, arch)
+    return "clang+llvm-{llvm_version}-{arch}-{suffix}.tar.xz".format(
+        llvm_version = llvm_version,
+        arch = arch,
+        suffix = suffix,
+    )
 
 def _windows(llvm_version):
     if platform.machine().endswith('64'):
@@ -129,7 +162,7 @@ def main():
 
     system = platform.system()
     if system == "Darwin":
-        print(_darwin(llvm_version))
+        print(_darwin(llvm_version, "x86_64"))
         sys.exit()
 
     if system == "Windows":
