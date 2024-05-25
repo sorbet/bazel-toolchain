@@ -75,7 +75,7 @@ def _ubuntu_osname(arch, version, major_llvm_version, llvm_version):
         # Availability may be sparse for patch releases.
         if llvm_version in ["16.0.4", "16.0.3", "16.0.2"]:
             os_name = "linux-gnu-ubuntu-22.04"
-        elif llvm_version in ["16.0.1"]:
+        elif llvm_version in ["15.0.7", "16.0.1"]:
             os_name = "linux-gnu-ubuntu-20.04"
         elif llvm_version in ["15.0.6", "13.0.1"]:
             os_name = "linux-gnu-ubuntu-18.04"
