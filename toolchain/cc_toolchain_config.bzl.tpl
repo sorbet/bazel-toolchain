@@ -31,8 +31,10 @@ load(
 load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 
 def _impl(ctx):
-    if (ctx.attr.cpu == "darwin"):
-        toolchain_identifier = "clang-darwin"
+    if (ctx.attr.cpu == "darwin-x86_64"):
+        toolchain_identifier = "clang-darwin-x86_64"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        toolchain_identifier = "clang-darwin-arm64"
     elif (ctx.attr.cpu == "k8"):
         toolchain_identifier = "clang-linux-x86_64"
     elif (ctx.attr.cpu == "aarch64"):
@@ -44,13 +46,17 @@ def _impl(ctx):
         host_system_name = "x86_64"
     elif (ctx.attr.cpu == "aarch64"):
         host_system_name = "aarch64"
-    elif (ctx.attr.cpu == "darwin"):
+    elif (ctx.attr.cpu == "darwin-x86_64"):
         host_system_name = "x86_64-apple-macosx"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        host_system_name = "arm64-apple-macosx"
     else:
         fail("Unreachable")
 
-    if (ctx.attr.cpu == "darwin"):
+    if (ctx.attr.cpu == "darwin-x86_64"):
         target_system_name = "x86_64-apple-macosx"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        target_system_name = "arm64-apple-macosx"
     elif (ctx.attr.cpu == "k8"):
         target_system_name = "x86_64-unknown-linux-gnu"
     elif (ctx.attr.cpu == "aarch64"):
@@ -58,8 +64,10 @@ def _impl(ctx):
     else:
         fail("Unreachable")
 
-    if (ctx.attr.cpu == "darwin"):
-        target_cpu = "darwin"
+    if (ctx.attr.cpu == "darwin-x86_64"):
+        target_cpu = "darwin-x86_64"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        target_cpu = "darwin-arm64"
     elif (ctx.attr.cpu == "k8"):
         target_cpu = "k8"
     elif (ctx.attr.cpu == "aarch64"):
@@ -71,12 +79,15 @@ def _impl(ctx):
         target_libc = "glibc_unknown"
     elif (ctx.attr.cpu == "aarch64"):
         target_libc = "glibc_unknown"
-    elif (ctx.attr.cpu == "darwin"):
+    elif (ctx.attr.cpu == "darwin-x86_64"):
+        target_libc = "macosx"
+    elif (ctx.attr.cpu == "darwin-arm64"):
         target_libc = "macosx"
     else:
         fail("Unreachable")
 
-    if (ctx.attr.cpu == "darwin" or
+    if (ctx.attr.cpu == "darwin-x86_64" or
+        ctx.attr.cpu == "darwin-arm64" or
         ctx.attr.cpu == "k8" or
         ctx.attr.cpu == "aarch64"):
         compiler = "clang"
@@ -87,13 +98,17 @@ def _impl(ctx):
         abi_version = "clang"
     elif (ctx.attr.cpu == "aarch64"):
         abi_version = "clang"
-    elif (ctx.attr.cpu == "darwin"):
+    elif (ctx.attr.cpu == "darwin-x86_64"):
         abi_version = "darwin_x86_64"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        abi_version = "darwin_arm64"
     else:
         fail("Unreachable")
 
-    if (ctx.attr.cpu == "darwin"):
+    if (ctx.attr.cpu == "darwin-x86_64"):
         abi_libc_version = "darwin_x86_64"
+    elif (ctx.attr.cpu == "darwin-arm64"):
+        abi_libc_version = "darwin_arm64"
     elif (ctx.attr.cpu == "k8"):
         abi_libc_version = "glibc_unknown"
     elif (ctx.attr.cpu == "aarch64"):
@@ -103,7 +118,8 @@ def _impl(ctx):
 
     cc_target_os = None
 
-    if (ctx.attr.cpu == "darwin" or
+    if (ctx.attr.cpu == "darwin-x86_64" or
+        ctx.attr.cpu == "darwin-arm64" or
         ctx.attr.cpu == "k8" or
         ctx.attr.cpu == "aarch64"):
         builtin_sysroot = "%{sysroot_path}"
@@ -179,7 +195,7 @@ def _impl(ctx):
             "-Wl,--hash-style=both",
             "-Wl,-z,relro,-z,now",
         ]
-    elif ctx.attr.cpu == "darwin":
+    elif ctx.attr.cpu == "darwin-x86_64" or ctx.attr.cpu == "darwin-arm64":
         linker_flags = [
             "-headerpad_max_install_names",
             "-undefined",
@@ -286,7 +302,7 @@ def _impl(ctx):
                     ),
                 ],
             ),
-        ] if ctx.attr.cpu == "darwin" else []),
+        ] if ctx.attr.cpu == "darwin-x86_64" or ctx.attr.cpu == "darwin-arm64" else []),
     )
 
     default_compile_flags_feature = feature(
@@ -584,7 +600,7 @@ def _impl(ctx):
         ] + [
             %{aarch64_additional_cxx_builtin_include_directories}
         ]
-    elif (ctx.attr.cpu == "darwin"):
+    elif (ctx.attr.cpu == "darwin-x86_64" or ctx.attr.cpu == "darwin-arm64"):
         cxx_builtin_include_directories += [
             "%{sysroot_prefix}/usr/include",
             "%{sysroot_prefix}/System/Library/Frameworks",
@@ -597,7 +613,7 @@ def _impl(ctx):
 
     artifact_name_patterns = []
 
-    if (ctx.attr.cpu == "darwin"):
+    if (ctx.attr.cpu == "darwin-x86_64" or ctx.attr.cpu == "darwin-arm64"):
         make_variables = [
             make_variable(
                 name = "STACK_FRAME_UNLIMITED",
@@ -651,7 +667,7 @@ def _impl(ctx):
                 path = "%{tools_path_prefix}bin/llvm-ar",
             ),
         ]
-    elif (ctx.attr.cpu == "darwin"):
+    elif (ctx.attr.cpu == "darwin-x86_64" or ctx.attr.cpu == "darwin-arm64"):
         tool_paths = [
             tool_path(name = "ld", path = "%{tools_path_prefix}bin/ld"),
             tool_path(
@@ -720,7 +736,8 @@ cc_toolchain_config = rule(
         "cpu": attr.string(
             mandatory = True,
             values = [
-                "darwin",
+                "darwin-x86_64",
+                "darwin-arm64",
                 "k8",
                 "aarch64"
             ],

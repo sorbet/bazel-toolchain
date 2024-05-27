@@ -16,5 +16,6 @@ def llvm_register_toolchains():
     native.register_toolchains(
         "@%{repo_name}//:cc-toolchain-linux-aarch64",
         "@%{repo_name}//:cc-toolchain-linux-x86_64",
-        "@%{repo_name}//:cc-toolchain-darwin",
+        "@%{repo_name}//:cc-toolchain-darwin-arm64",
+        "@%{repo_name}//:cc-toolchain-darwin-x86_64",
     )

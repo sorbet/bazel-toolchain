@@ -41,10 +41,11 @@ cc_toolchain_suite(
     toolchains = {
         "k8|clang": ":cc-clang-linux-x86_64",
         "aarch64|clang": ":cc-clang-linux-aarch64",
-        "darwin|clang": ":cc-clang-darwin",
+        "darwin|clang": ":cc-clang-darwin-x86_64",
         "k8": ":cc-clang-linux-x86_64",
         "aarch64": ":cc-clang-linux-aarch64",
-        "darwin": ":cc-clang-darwin",
+        "darwin-x86_64": ":cc-clang-darwin-x86_64",
+        "darwin_arm64": ":cc-clang-darwin-arm64",
     },
 )
 
@@ -61,12 +62,17 @@ cc_toolchain_config(
 )
 
 cc_toolchain_config(
-    name = "local_darwin",
-    cpu = "darwin",
+    name = "local_darwin-x86_64",
+    cpu = "darwin-x86_64",
+)
+
+cc_toolchain_config(
+    name = "local_darwin-arm64",
+    cpu = "darwin-arm64",
 )
 
 toolchain(
-    name = "cc-toolchain-darwin",
+    name = "cc-toolchain-darwin-x86_64",
     exec_compatible_with = [
         "@platforms//cpu:x86_64",
         "@platforms//os:osx",
@@ -75,7 +81,21 @@ toolchain(
         "@platforms//cpu:x86_64",
         "@platforms//os:osx",
     ],
-    toolchain = ":cc-clang-darwin",
+    toolchain = ":cc-clang-darwin-x86_64",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)
+
+toolchain(
+    name = "cc-toolchain-darwin-arm64",
+    exec_compatible_with = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:osx",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:osx",
+    ],
+    toolchain = ":cc-clang-darwin-arm64",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
 
@@ -111,7 +131,8 @@ load("@com_grail_bazel_toolchain//toolchain:rules.bzl", "conditional_cc_toolchai
 
 conditional_cc_toolchain("cc-clang-linux-x86_64", "x86_64", False, %{absolute_paths})
 conditional_cc_toolchain("cc-clang-linux-aarch64", "aarch64", False, %{absolute_paths})
-conditional_cc_toolchain("cc-clang-darwin", "x86_64", True, %{absolute_paths})
+conditional_cc_toolchain("cc-clang-darwin-x86_64", "x86_64", True, %{absolute_paths})
+conditional_cc_toolchain("cc-clang-darwin-arm64", "arm64", True, %{absolute_paths})
 
 ## LLVM toolchain files
 # Needed when not using absolute paths.

@@ -116,8 +116,8 @@ def llvm_register_toolchains():
 def conditional_cc_toolchain(name, cpu, darwin, absolute_paths = False):
     # Toolchain macro for BUILD file to use conditional logic.
 
-    toolchain_config = "local_darwin" if darwin else ("local_linux-%s" % cpu)
-    toolchain_identifier = "clang-darwin" if darwin else ("clang-linux-%s" % cpu)
+    toolchain_config = "local_darwin-x86_64" if darwin else ("local_linux-%s" % cpu)
+    toolchain_identifier = "clang-darwin-x86_64" if darwin else ("clang-linux-%s" % cpu)
 
     if absolute_paths:
         _cc_toolchain(
