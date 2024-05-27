@@ -51,9 +51,9 @@ def _darwin_apple_suffix(llvm_version, arch):
     else:
         return "apple-darwin"
 
-def _darwin(llvm_version, arch):
-    if arch == "aarch64":
-        arch = "arm64"
+def _darwin(llvm_version):
+    arch = platform.machine()
+
     suffix = _darwin_apple_suffix(llvm_version, arch)
     return "clang+llvm-{llvm_version}-{arch}-{suffix}.tar.xz".format(
         llvm_version = llvm_version,
@@ -162,7 +162,7 @@ def main():
 
     system = platform.system()
     if system == "Darwin":
-        print(_darwin(llvm_version, "x86_64"))
+        print(_darwin(llvm_version))
         sys.exit()
 
     if system == "Windows":
