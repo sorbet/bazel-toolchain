@@ -149,7 +149,7 @@ def cc_toolchain_config(
     link_libs = []
 
     # Linker flags:
-    if host_os == "darwin" and not is_xcompile:
+    if host_os == "darwin" and target_os == "darwin":
         use_lld = False
         ld_name = "ld64.lld"
         link_flags.extend([
@@ -175,7 +175,7 @@ def cc_toolchain_config(
     # always link C++ libraries.
     cxx_standard = compiler_configuration["cxx_standard"]
     stdlib = compiler_configuration["stdlib"]
-    if stdlib == "builtin-libc++" and is_xcompile:
+    if stdlib == "builtin-libc++" and is_xcompile and not target_os == "darwin":
         stdlib = "stdc++"
     if stdlib == "builtin-libc++":
         cxx_flags = [
