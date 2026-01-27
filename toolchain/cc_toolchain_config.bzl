@@ -357,8 +357,16 @@ def cc_toolchain_config(
     # https://cs.opensource.google/bazel/bazel/+/refs/tags/7.0.0:tools/cpp/unix_cc_toolchain_config.bzl;l=192,201;drc=044a14cca2747aeff258fc71eaeb153c08cb34d5
     # https://github.com/bazelbuild/rules_cc/blob/fe41fc4ea219c9d3680ee536bba6681f3baf838e/cc/private/toolchain/unix_cc_toolchain_config.bzl#L1887
     # NOTE: Ensure these are listed in toolchain_tools in toolchain/internal/common.bzl.
+
+    # This assumes we're not using `absolute_paths=False`, which will attempt to use a symlinked version of this called
+    # just `libtool`. I think it would be pretty straight forward to fix this, but as we don't use
+    # `absolute_paths=False` in Sorbet, it doesn't seem very important right now.
+    libtool_name = "libtool"
+    if use_libtool and exec_os == "darwin":
+        libtool_name = "llvm-libtool-darwin"
+
     tool_paths = {
-        "ar": tools_path_prefix + ("llvm-ar" if not use_libtool else "libtool"),
+        "ar": tools_path_prefix + ("llvm-ar" if not use_libtool else libtool_name),
         "cpp": tools_path_prefix + "clang-cpp",
         "dwp": tools_path_prefix + "llvm-dwp",
         "gcc": wrapper_bin_prefix + "cc_wrapper.sh",
