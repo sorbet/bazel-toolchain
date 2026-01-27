@@ -161,6 +161,10 @@ def cc_toolchain_config(
         "-D__TIME__=\"redacted\"",
     ]
 
+    # Targeting darwin from darwin invalidates some of the cross compiling logic below,
+    # so we call this case out separately to avoid using the wrong tools.
+    is_darwin_for_darwin = exec_os == "darwin" and target_os == "darwin"
+
     is_xcompile = not (exec_os == target_os and exec_arch == target_arch)
 
     # Default compiler flags:
@@ -211,7 +215,7 @@ def cc_toolchain_config(
     archive_flags = []
 
     # Linker flags:
-    if exec_os == "darwin" and not is_xcompile:
+    if is_darwin_for_darwin:
         # lld is experimental for Mach-O, so we use the native ld64 linker.
         # TODO: How do we cross-compile from Linux to Darwin?
         use_lld = False
@@ -252,7 +256,7 @@ def cc_toolchain_config(
     cxx_standard = compiler_configuration["cxx_standard"]
     conly_flags = compiler_configuration["conly_flags"]
     sysroot_path = compiler_configuration["sysroot_path"]
-    if stdlib == "builtin-libc++" and is_xcompile:
+    if stdlib == "builtin-libc++" and is_xcompile and not is_darwin_for_darwin:
         stdlib = "stdc++"
     if stdlib == "builtin-libc++":
         cxx_flags = [
