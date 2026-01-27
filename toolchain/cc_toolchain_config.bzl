@@ -294,12 +294,8 @@ def cc_toolchain_config(
                 "-lc++",
                 "-lc++abi",
                 "-Bdynamic",
-                "-L{}lib".format(toolchain_path_prefix),
             ])
-            libunwind_link_flags = [
-                "-Bstatic",
-                "-lunwind",
-            ]
+            libunwind_link_flags = []
 
     elif stdlib == "libc++":
         cxx_flags = [
