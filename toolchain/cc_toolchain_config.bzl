@@ -194,6 +194,9 @@ def cc_toolchain_config(
         "-fdata-sections",
     ]
 
+    # By default, we use the `lld` linker that comes with the llvm dist.
+    ld_name = "lld"
+
     link_flags = [
         "--target=" + target_system_name,
         "-no-canonical-prefixes",
@@ -214,12 +217,17 @@ def cc_toolchain_config(
     # Flags for ar.
     archive_flags = []
 
+
     # Linker flags:
     if is_darwin_for_darwin:
-        # lld is experimental for Mach-O, so we use the native ld64 linker.
         # TODO: How do we cross-compile from Linux to Darwin?
         use_lld = False
+
+        # Use the ld64.lld linker included with the llvm release.
+        ld_name = "ld64.lld"
+
         link_flags.extend([
+            "-fuse-ld=ld64.lld",
             "-headerpad_max_install_names",
             "-fobjc-link-runtime",
         ])
@@ -295,9 +303,8 @@ def cc_toolchain_config(
             # directory back after we are done.
             link_flags.extend([
                 "-L{}/usr/lib".format(sysroot_path),
-                "-lc++",
-                "-lc++abi",
-                "-Bdynamic",
+                "{}lib/libc++.a".format(toolchain_path_prefix),
+                "{}lib/libc++abi.a".format(toolchain_path_prefix)
             ])
             libunwind_link_flags = []
 
@@ -375,7 +382,7 @@ def cc_toolchain_config(
         "dwp": tools_path_prefix + "llvm-dwp",
         "gcc": wrapper_bin_prefix + "cc_wrapper.sh",
         "gcov": tools_path_prefix + "llvm-profdata",
-        "ld": tools_path_prefix + "ld.lld" if use_lld else "/usr/bin/ld",
+        "ld": tools_path_prefix + ld_name,
         "llvm-cov": tools_path_prefix + "llvm-cov",
         "llvm-profdata": tools_path_prefix + "llvm-profdata",
         "nm": tools_path_prefix + "llvm-nm",
