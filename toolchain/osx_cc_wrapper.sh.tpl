@@ -136,18 +136,16 @@ function sanitize_option() {
 
 cmd=()
 for ((i = 0; i <= $#; i++)); do
-  if [[ ${!i} == @* && -r "${i:1}" ]]; then
+  if [[ ${!i} == @* && -r "${!i:1}" ]]; then
     tmpfile=$(mktemp)
     CLEANUP_FILES+=("${tmpfile}")
     while IFS= read -r opt; do
-      if [[ ${opt} == "-fuse-ld=ld64.lld" ]]; then
-        echo "-fuse-ld=lld" >>"${tmpfile}"
-      fi
       opt="$(
         set -e
         sanitize_option "${opt}"
       )"
-      parse_option "${opt}" >>"${tmpfile}"
+      parse_option "${opt}"
+      echo "${opt}" >> ${tmpfile}
     done <"${!i:1}"
     cmd+=("@${tmpfile}")
   else
