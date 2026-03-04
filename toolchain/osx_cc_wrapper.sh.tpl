@@ -140,15 +140,22 @@ for ((i = 0; i <= $#; i++)); do
     tmpfile=$(mktemp)
     CLEANUP_FILES+=("${tmpfile}")
     while IFS= read -r opt; do
+      # We need to set both -fuse-ld=lld and --ld-path to use ld64.lld
+      if [[ ${opt} == "-fuse-ld=ld64.lld" ]]; then
+        echo "-fuse-ld=lld" >>${tmpfile}
+      fi
       opt="$(
         set -e
         sanitize_option "${opt}"
       )"
       parse_option "${opt}"
-      echo "${opt}" >> ${tmpfile}
+      echo "${opt}" >>${tmpfile}
     done <"${!i:1}"
     cmd+=("@${tmpfile}")
   else
+    if [[ ${!i} == "-fuse-ld=ld64.lld" ]]; then
+      cmd+=("-fuse-ld=lld")
+    fi
     opt="$(
       set -e
       sanitize_option "${!i}"
